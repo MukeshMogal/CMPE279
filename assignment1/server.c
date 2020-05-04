@@ -14,7 +14,9 @@ int main(int argc, char const *argv[])
     int addrlen = sizeof(address); 
     char buffer[1024] = {0}; 
     char *hello = "Hello from server"; 
-       
+    
+    int forked_pid;
+    int var;  
     // Creating socket file descriptor 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
     { 
@@ -23,8 +25,8 @@ int main(int argc, char const *argv[])
     } 
        
     // Forcefully attaching socket to the port 8080 
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
-                                                  &opt, sizeof(opt))) 
+    //if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) // changed for mac
     { 
         perror("setsockopt"); 
         exit(EXIT_FAILURE); 
@@ -40,17 +42,39 @@ int main(int argc, char const *argv[])
         perror("bind failed"); 
         exit(EXIT_FAILURE); 
     } 
-    if (listen(server_fd, 3) < 0) 
-    { 
-        perror("listen"); 
-        exit(EXIT_FAILURE); 
-    } 
-    if ((new_socket = accept(server_fd, (struct sockaddr *)&address,  
+
+    
+    forked_pid = fork();   // creates child process
+    printf("\npid is %d",forked_pid);
+
+    if(forked_pid == 0)
+    {
+        printf("Child process created....\n");
+        setuid(65534);
+
+        printf("uid is %d" , getuid());
+
+
+ 
+        if (listen(server_fd, 3) < 0) 
+        { 
+            perror("listen"); 
+            exit(EXIT_FAILURE); 
+        } 
+        if ((new_socket = accept(server_fd, (struct sockaddr *)&address,  
                        (socklen_t*)&addrlen))<0) 
-    { 
-        perror("accept"); 
-        exit(EXIT_FAILURE); 
-    } 
+        { 
+            perror("accept"); 
+            exit(EXIT_FAILURE); 
+        }
+
+    }
+
+    else{
+        printf("Fork failed...\n");
+    }
+
+
     valread = read( new_socket , buffer, 1024); 
     printf("%s\n",buffer ); 
     send(new_socket , hello , strlen(hello) , 0 ); 
