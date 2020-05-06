@@ -84,13 +84,13 @@ int main(int argc, char const *argv[])
         setuid(65534);
 
         printf("uid is %d" , getuid());
-
+        //converting socket_fd to string
         char socket_fd[15];
         sprintf(socket_fd , "%d" , server_fd);
 
         char *args[] = {"./server" , socket_fd , NULL};
         printf("execing...%s" , socket_fd);
-        execv("./server" , args);  //execing self
+        execvp(args[0] , args);  //execing self
         return 0;
 
     }
