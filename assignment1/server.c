@@ -5,7 +5,7 @@
 #include <stdlib.h> 
 #include <netinet/in.h> 
 #include <string.h> 
-#define PORT 8080 
+#define PORT 80 
 int main(int argc, char const *argv[]) 
 { 
     int server_fd, new_socket, valread; 
@@ -43,16 +43,16 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE); 
     } 
 
-    
-    forked_pid = fork();   // creates child process
-    printf("\npid is %d",forked_pid);
+    // creates child process
+    forked_pid = fork();   
+    printf("\nfork() return value %d",forked_pid);
 
     if(forked_pid == 0)
     {
         printf("Child process created....\n");
         setuid(65534);
 
-        printf("uid is %d" , getuid());
+        printf("\nuid is %d" , getuid());
 
 
  
