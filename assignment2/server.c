@@ -80,7 +80,7 @@ int main(int argc, char const *argv[])
 
     if(forked_pid == 0)
     {
-        printf("Child process created....\n");
+        printf("\nChild process created....\n");
         setuid(65534);
 
         printf("uid is %d" , getuid());
@@ -89,7 +89,7 @@ int main(int argc, char const *argv[])
         sprintf(socket_fd , "%d" , server_fd);
 
         char *args[] = {"./server" , socket_fd , NULL};
-        printf("execing...%s" , socket_fd);
+        printf("\nexecing...%s" , socket_fd);
         execvp(args[0] , args);  //execing self
         return 0;
 
