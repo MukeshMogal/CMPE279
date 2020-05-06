@@ -96,7 +96,7 @@ int main(int argc, char const *argv[])
     }
 
     else{
-        printf("Fork failed...\n");
+        printf("Execution happening in parent...\n");
     }
     return 0; 
 } 
